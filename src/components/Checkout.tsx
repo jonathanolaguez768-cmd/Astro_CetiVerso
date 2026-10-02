@@ -1,4 +1,3 @@
-// src/components/Checkout.tsx
 import { useState, useTransition } from 'react'
 import { useCartStore } from '../store/cartStore'
 import { createOrder } from '../services/graphql'

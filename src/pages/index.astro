@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import Sidebar from '../components/Sidebar.astro';
 import ProductCard from '../components/ProductCard.astro';
+import LoadMoreButton from '../components/LoadMoreButton.tsx';
 import { getCategories, getProducts } from '../services/graphql';
 import '../styles/Home.css';
 import type { Category } from '../types/category';
@@ -10,6 +11,8 @@ import type { Product } from '../types/product';
 
 let categories: Category[] = [];
 let products: Product[] = [];
+let nextCursor: string | null = null;
+let hasMore: boolean = false;
 let error: string | null = null;
 
 try {
@@ -19,6 +22,8 @@ try {
   ]);
   categories = categoriesData;
   products = productsData.productos;
+  nextCursor = productsData.siguienteCursor;
+  hasMore = productsData.hayMas;
 } catch (e) {
   error = e instanceof Error ? e.message : 'Error al cargar el catálogo';
 }
@@ -47,6 +52,12 @@ try {
               {products.map((product) => (
                 <ProductCard product={product} />
               ))}
+
+              <LoadMoreButton 
+                initialCursor={nextCursor} 
+                initialHasMore={hasMore} 
+                client:load 
+              />
             </div>
           )}
         </section>
